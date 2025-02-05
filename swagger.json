@@ -1,0 +1,143 @@
+{
+    "swagger":"2.0",
+    "info":{
+        "version":"1.0.0",
+        "title":"E-commerce API",
+        "description":"API DOCUMENTATION FOR THE E-commerce APPLICATION"
+    },
+    "host":"localhost:3000",
+    "basePath":"/",
+    "schemas":["http"],
+    "paths":{
+        "/users/register":{
+            "post":{
+                "summary":"REGISTER A NEW USER",
+                "parameters":[
+                    {
+                        "in":"body",
+                        "name":"body",
+                        "description":"USER REGISTRATION DETAILS",
+                        "reguired":true,
+                        "schema":{
+                            "type":"object",
+                            "properties":{
+                                "username":{"type":"string"},
+                                "password":{"type":"string"},
+                                "email":{"type":"string"},
+                                "address":{"type":"string"}
+
+                            }
+                        }
+                    }
+                ],
+                "responses":{
+                    "201":{"description":"USER REGISTERED SUCCESSFULLY"},
+                    "400":{"description":"USER ALREADY EXISTS"}
+                }
+            }
+        },
+        "/users/login":{
+            "post":{
+                "summary":"USER LOGIN",
+                "parameters":[
+                    {
+                        "in":"body",
+                        "name":"body",
+                        "description":"LOGIN CREDENTIALS",
+                        "reguired":true,
+                        "schema":{
+                            "type":"object",
+                            "properties":{
+                                "username":{"type":"string"},
+                                "password":{"type":"string"}
+                            }
+                        }
+                    }
+                ],
+                "responses":{
+                    "200":{"description":"LOGIN SUCCESSFUL,RETURN JWT TOKEN"},
+                    "401":{"description":"INVALID CREDENTIALS"}
+                }
+            }
+        },
+        "/products":{
+            "get":{
+                "summary":"FETCH ALL PRODUCTS",
+                "responses":{
+                    "200":{
+                        "description":"RETURN A LIST OF PRODUCTS"
+                    }
+                }
+            },
+            "post":{
+                "summary":"CREATE A NEW PRODUCT(ADMIN ONLY)",
+                "security":[{"BearerAuth":[]}],
+                "parameters":[
+                    {
+                        "in":"body",
+                        "name":"body",
+                        "description":"PRODUCT DETAILS",
+                        "reguired":true,
+                        "schema":{
+                            "type":"object",
+                            "properties":{
+                                "name":{"type":"string"},
+                                "description":{"type":"string"},
+                                "price":{"type":"number"},
+                                "stock":{"type":"integer"}
+                            }
+                        }
+                    }
+                ],
+                "responses":{
+                    "201":{"description":"PRODUCT CREATED SUCCESSFULLY"},
+                    "403":{"description":"FORBIDDEN - ONLY ADMINS CAN ADD PRODUCTS"}
+                }
+            }
+        },
+        "/orders":{
+            "post":{
+                "summary":"CREATE AN ORDER (AUTHENDTICATED USERS ONLY)",
+                "security":[{"BearerAuth":[]}],
+                "parameters":[
+                    {
+                        "in":"body",
+                        "name":"body",
+                        "description":"ORDER DETAILS",
+                        "reguired":true,
+                        "schema":{
+                            "type":"object",
+                            "properties":{
+                                "userId":{"type":"integer"},
+                                "items":{
+                                    "type":"array",
+                                    "items":{
+                                        "type":"object",
+                                        "properties":{
+                                            "productId":{"type":"integer"},
+                                            "quantity":{"type":"integer"},
+                                            "price":{"type":"number"}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses":{
+                    "201":{"description":"ORDER PLACED SUCCESSFULLY"},
+                    "400":{"description":"INVALID REQUEST DATA"}
+                }
+            }
+        }
+    },
+    "securityDefinitions":{
+        "BearerAuth":{
+            "type":"apiKey",
+            "name":"Authorization",
+            "in":"header",
+            "description":"JWT TOKEN IN THE FORMAT : BEARER <token>"
+        }
+    } 
+
+}
