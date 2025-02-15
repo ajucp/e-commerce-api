@@ -4,7 +4,7 @@ exports.register=async(req,res)=>{
     console.log('REGISTER USER CONTROLLER');
     try {
         const user=req.body;
-
+        
         const userId=await UserService.registerUser(user);
         res.status(201).json({message:'USER REGISTERED SUCCESSFULLY',id:userId});
 

@@ -1,122 +1,235 @@
 {
-    "swagger":"2.0",
-    "info":{
-        "version":"1.0.0",
-        "title":"E-commerce API",
-        "description":"API DOCUMENTATION FOR THE E-commerce APPLICATION"
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "E-commerce API",
+        "description": "API DOCUMENTATION FOR THE E-commerce APPLICATION"
     },
-    "host":"localhost:3000",
-    "basePath":"/",
-    "schemas":["http"],
-    "paths":{
-        "/users/register":{
-            "post":{
-                "summary":"REGISTER A NEW USER",
-                "parameters":[
+    "host": "localhost:5000",
+    "basePath": "/",
+    "schemas": ["http"],
+    "paths": {
+        "/users/register": {
+            "post": {
+                "summary": "REGISTER A NEW USER",
+                "parameters": [
                     {
-                        "in":"body",
-                        "name":"body",
-                        "description":"USER REGISTRATION DETAILS",
-                        "reguired":true,
-                        "schema":{
-                            "type":"object",
-                            "properties":{
-                                "username":{"type":"string"},
-                                "password":{"type":"string"},
-                                "email":{"type":"string"},
-                                "address":{"type":"string"}
-
+                        "in": "body",
+                        "name": "body",
+                        "description": "USER REGISTRATION DETAILS",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "username": { "type": "string" },
+                                "password": { "type": "string" },
+                                "email": { "type": "string" },
+                                "address": { "type": "string" }
                             }
                         }
                     }
                 ],
-                "responses":{
-                    "201":{"description":"USER REGISTERED SUCCESSFULLY"},
-                    "400":{"description":"USER ALREADY EXISTS"}
+                "responses": {
+                    "201": { "description": "USER REGISTERED SUCCESSFULLY" },
+                    "400": { "description": "USER ALREADY EXISTS" }
                 }
             }
         },
-        "/users/login":{
-            "post":{
-                "summary":"USER LOGIN",
-                "parameters":[
+        "/users/login": {
+            "post": {
+                "summary": "USER LOGIN",
+                "parameters": [
                     {
-                        "in":"body",
-                        "name":"body",
-                        "description":"LOGIN CREDENTIALS",
-                        "reguired":true,
-                        "schema":{
-                            "type":"object",
-                            "properties":{
-                                "username":{"type":"string"},
-                                "password":{"type":"string"}
+                        "in": "body",
+                        "name": "body",
+                        "description": "LOGIN CREDENTIALS",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "username": { "type": "string" },
+                                "password": { "type": "string" }
                             }
                         }
                     }
                 ],
-                "responses":{
-                    "200":{"description":"LOGIN SUCCESSFUL,RETURN JWT TOKEN"},
-                    "401":{"description":"INVALID CREDENTIALS"}
+                "responses": {
+                    "200": { "description": "LOGIN SUCCESSFUL, RETURN JWT TOKEN" },
+                    "401": { "description": "INVALID CREDENTIALS" }
                 }
             }
         },
-        "/products":{
-            "get":{
-                "summary":"FETCH ALL PRODUCTS",
-                "responses":{
-                    "200":{
-                        "description":"RETURN A LIST OF PRODUCTS"
+        "/users/{id}": {
+            "get": {
+                "summary": "FETCH USER BY ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "USER ID",
+                        "required": true,
+                        "type": "integer"
                     }
+                ],
+                "responses": {
+                    "200": { "description": "USER FETCHED SUCCESSFULLY" },
+                    "404": { "description": "USER NOT FOUND" }
                 }
             },
-            "post":{
-                "summary":"CREATE A NEW PRODUCT(ADMIN ONLY)",
-                "security":[{"BearerAuth":[]}],
-                "parameters":[
+            "put": {
+                "summary": "UPDATE USER DETAILS",
+                "parameters": [
                     {
-                        "in":"body",
-                        "name":"body",
-                        "description":"PRODUCT DETAILS",
-                        "reguired":true,
-                        "schema":{
-                            "type":"object",
-                            "properties":{
-                                "name":{"type":"string"},
-                                "description":{"type":"string"},
-                                "price":{"type":"number"},
-                                "stock":{"type":"integer"}
+                        "in": "path",
+                        "name": "id",
+                        "description": "USER ID",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "USER DETAILS TO UPDATE",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "username": { "type": "string" },
+                                "password": { "type": "string" },
+                                "email": { "type": "string" },
+                                "address": { "type": "string" }
                             }
                         }
                     }
                 ],
-                "responses":{
-                    "201":{"description":"PRODUCT CREATED SUCCESSFULLY"},
-                    "403":{"description":"FORBIDDEN - ONLY ADMINS CAN ADD PRODUCTS"}
+                "responses": {
+                    "200": { "description": "USER UPDATED SUCCESSFULLY" },
+                    "400": { "description": "BAD REQUEST" },
+                    "404": { "description": "USER NOT FOUND" }
                 }
             }
         },
-        "/orders":{
-            "post":{
-                "summary":"CREATE AN ORDER (AUTHENDTICATED USERS ONLY)",
-                "security":[{"BearerAuth":[]}],
-                "parameters":[
+        "/products": {
+            "get": {
+                "summary": "FETCH ALL PRODUCTS",
+                "responses": {
+                    "200": { "description": "RETURN A LIST OF PRODUCTS" }
+                }
+            },
+            "post": {
+                "summary": "CREATE A NEW PRODUCT (ADMIN ONLY)",
+                "security": [{ "BearerAuth": [] }],
+                "parameters": [
                     {
-                        "in":"body",
-                        "name":"body",
-                        "description":"ORDER DETAILS",
-                        "reguired":true,
-                        "schema":{
-                            "type":"object",
-                            "properties":{
-                                "userId":{"type":"integer"},
-                                "items":{
-                                    "type":"array",
-                                    "items":{
-                                        "type":"object",
-                                        "properties":{
-                                            "productId":{"type":"integer"},
-                                            "quantity":{"type":"integer"},
-                                            "price":{"type":"number"}
+                        "in": "body",
+                        "name": "body",
+                        "description": "PRODUCT DETAILS",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": { "type": "string" },
+                                "description": { "type": "string" },
+                                "price": { "type": "number" },
+                                "stock": { "type": "integer" }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": { "description": "PRODUCT CREATED SUCCESSFULLY" },
+                    "403": { "description": "FORBIDDEN - ONLY ADMINS CAN ADD PRODUCTS" }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "summary": "FETCH PRODUCT BY ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "PRODUCT ID",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": { "description": "PRODUCT FETCHED SUCCESSFULLY" },
+                    "404": { "description": "PRODUCT NOT FOUND" }
+                }
+            },
+            "put": {
+                "summary": "UPDATE PRODUCT DETAILS",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "PRODUCT ID",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "PRODUCT DETAILS TO UPDATE",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": { "type": "string" },
+                                "description": { "type": "string" },
+                                "price": { "type": "number" },
+                                "stock": { "type": "integer" }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": { "description": "PRODUCT UPDATED SUCCESSFULLY" },
+                    "400": { "description": "BAD REQUEST" },
+                    "404": { "description": "PRODUCT NOT FOUND" }
+                }
+            },
+            "delete": {
+                "summary": "DELETE A PRODUCT",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "PRODUCT ID",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": { "description": "PRODUCT DELETED SUCCESSFULLY" },
+                    "404": { "description": "PRODUCT NOT FOUND" }
+                }
+            }
+        },
+        "/orders": {
+            "post": {
+                "summary": "CREATE AN ORDER (AUTHENTICATED USERS ONLY)",
+                "security": [{ "BearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "ORDER DETAILS",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "userId": { "type": "integer" },
+                                "items": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "productId": { "type": "integer" },
+                                            "quantity": { "type": "integer" },
+                                            "price": { "type": "number" }
                                         }
                                     }
                                 }
@@ -124,20 +237,75 @@
                         }
                     }
                 ],
-                "responses":{
-                    "201":{"description":"ORDER PLACED SUCCESSFULLY"},
-                    "400":{"description":"INVALID REQUEST DATA"}
+                "responses": {
+                    "201": { "description": "ORDER PLACED SUCCESSFULLY" },
+                    "400": { "description": "INVALID REQUEST DATA" },
+                    "401": { "description": "UNAUTHORIZED - INVALID TOKEN" }
+                }
+            }
+        },
+        "/orders/{id}": {
+            "get": {
+                "summary": "FETCH ORDER BY ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ORDER ID",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": { "description": "ORDER FETCHED SUCCESSFULLY" },
+                    "404": { "description": "ORDER NOT FOUND" }
+                }
+            },
+            "delete": {
+                "summary": "DELETE AN ORDER",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ORDER ID",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": { "description": "ORDER DELETED SUCCESSFULLY" },
+                    "404": { "description": "ORDER NOT FOUND" }
+                }
+            }
+        },
+        "/orders/user/{userId}": {
+            "get": {
+                "summary": "FETCH ORDERS BY USER ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "description": "USER ID",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": { "description": "ORDERS FETCHED SUCCESSFULLY" },
+                    "404": { "description": "USER NOT FOUND" }
                 }
             }
         }
     },
-    "securityDefinitions":{
-        "BearerAuth":{
-            "type":"apiKey",
-            "name":"Authorization",
-            "in":"header",
-            "description":"JWT TOKEN IN THE FORMAT : BEARER <token>"
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "JWT Token in the format: Bearer <token>"
         }
-    } 
-
+    },
+    "security": [
+        { "BearerAuth": [] }
+    ]
 }

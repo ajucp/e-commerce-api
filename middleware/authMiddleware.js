@@ -3,6 +3,7 @@ require('dotenv').config();
 
 const AuthMiddleware={
     authenticateToken(req,res,next){
+        // console.log("Authorization Header:", req.headers.authorization);
 
         const authHeader=req.headers['authorization'];
         const token=authHeader && authHeader.split(' ')[1];
@@ -22,7 +23,8 @@ const AuthMiddleware={
     
     authorizeRoles(...roles){
         return(req,res,next)=>{
-            if(!roles.includes(req.user.roles))
+            console.log("User roles from token:", req.user); 
+            if(!roles.includes(req.user.role))
                 return res.status(403).json({message:'FORBIDDEN: INSUFFICIENT PERMISSIONS'});
 
             next();
